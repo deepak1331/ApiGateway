@@ -1,0 +1,34 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: ApiGateway
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: UserApp
+            uri: lb://UserApp # Target URI for the route
+            predicates:
+              - Path=/user/** # Route requests matching this path predicate
+
+          - id: HotelApp
+            uri: lb://HotelApp
+            predicates:
+              - Path=/hotel/**,/staff/**
+
+          - id: RatingApp
+            uri: lb://RatingApp
+            predicates:
+              - Path=/rating/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
